@@ -1,4 +1,4 @@
-package com.openai.guru.adapter.http.spring.dto.response
+package com.openai.guru.adapter.http.spring.dto.response.error
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.openai.guru.adapter.http.spring.dto.UserDto

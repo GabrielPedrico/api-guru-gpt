@@ -5,7 +5,7 @@ import org.hibernate.annotations.GenericGenerator
 import java.util.UUID
 
 @Entity
-@Table(name = "map", schema = "public")
+@Table(name = "tb_map", schema = "public")
 data class MapEntity(@Id
                      @GeneratedValue(generator = "UUID")
                      @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")

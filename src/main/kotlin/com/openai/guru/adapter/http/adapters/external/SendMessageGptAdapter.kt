@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.openai.guru.adapter.datastore.entities.UserEntity
 import com.openai.guru.adapter.http.spring.dto.UserDto
-import com.openai.guru.adapter.http.spring.dto.response.ErrorResponse
+import com.openai.guru.adapter.http.spring.dto.response.error.ErrorResponse
 import com.openai.guru.adapter.http.spring.dto.response.ThreadResponseDto
 import com.openai.guru.adapter.http.spring.dto.response.ThreadRunDto
 import com.openai.guru.config.properties.OpenAIProperties

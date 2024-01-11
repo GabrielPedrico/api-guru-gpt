@@ -1,7 +1,7 @@
 package com.openai.guru.config.advice
 
 import com.openai.guru.adapter.http.spring.dto.UserDto
-import com.openai.guru.adapter.http.spring.dto.response.ErrorResponse
+import com.openai.guru.adapter.http.spring.dto.response.error.ErrorResponse
 import com.openai.guru.core.exceptions.HttpException
 import jakarta.servlet.http.HttpServletRequest
 import org.springframework.http.HttpStatus

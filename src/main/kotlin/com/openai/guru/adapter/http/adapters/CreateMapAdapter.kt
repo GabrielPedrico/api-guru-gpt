@@ -1,7 +1,7 @@
 package com.openai.guru.adapter.http.adapters
 
 import com.openai.guru.adapter.datastore.repositories.UserRepository
-import com.openai.guru.adapter.http.spring.dto.response.ErrorResponse
+import com.openai.guru.adapter.http.spring.dto.response.error.ErrorResponse
 import com.openai.guru.core.exceptions.UserNotFoundException
 import com.openai.guru.core.model.ThreadResponseModel
 import com.openai.guru.core.port.out.CreateNumerologyMapPortOut
