@@ -1,2 +1,3 @@
-![image](https://github.com/GabrielPedrico/api-guru-gpt/assets/61802922/9e62bcb4-cd0c-4054-86d1-5520588706f5)
+![image](https://github.com/GabrielPedrico/api-guru-gpt/assets/61802922/ff7fc4d0-5f33-4f1f-b217-4f17b159737d)
+
 
