@@ -4,14 +4,12 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.openai.guru.adapter.datastore.entities.UserEntity
 import com.openai.guru.adapter.http.spring.dto.UserDto
-import com.openai.guru.adapter.http.spring.dto.response.error.ErrorResponse
 import com.openai.guru.adapter.http.spring.dto.response.ThreadResponseDto
 import com.openai.guru.adapter.http.spring.dto.response.ThreadRunDto
+import com.openai.guru.adapter.http.spring.dto.response.error.ErrorResponse
 import com.openai.guru.config.properties.OpenAIProperties
 import com.openai.guru.core.exceptions.SendGPTException
 import com.openai.guru.core.port.out.SendMessageGptPortOut
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
@@ -20,10 +18,9 @@ import org.springframework.web.client.RestTemplate
 
 @Component
 class SendMessageGptAdapter (val properties:OpenAIProperties,
-                             val endpoint:String = "/runs") : SendMessageGptPortOut {
+                             val endpoint:String = "/runs",
+                             val restTemplate:RestTemplate = RestTemplate()) : SendMessageGptPortOut {
     override fun createNumerologyMap(user: UserEntity) :ThreadResponseDto {
-        val logger: Logger? = LoggerFactory.getLogger(SendMessageGptAdapter::class.java)
-        val restTemplate = RestTemplate()
         val (endpoint, headers, requestBody) = createRequest(user)
         val requestEntity = HttpEntity(requestBody, headers)
         val responseEntity = restTemplate.postForEntity(endpoint, requestEntity, ThreadRunDto::class.java)
@@ -32,15 +29,15 @@ class SendMessageGptAdapter (val properties:OpenAIProperties,
     }
 
     private fun createRequest(user: UserEntity): Triple<String, HttpHeaders, String> {
-        val endpoint = properties.api + endpoint
+        val endpoint = properties?.api + endpoint
         val headers = HttpHeaders()
         headers.contentType = MediaType.APPLICATION_JSON
-        headers.set("OpenAI-Beta", properties.header)
-        headers.set("Authorization", properties.token)
+        headers.set("OpenAI-Beta", properties?.header)
+        headers.set("Authorization", properties?.token)
         val objectMapper = ObjectMapper().registerModule(KotlinModule())
         val requestBody = objectMapper.writeValueAsString(
             mapOf(
-                "assistant_id" to properties.assistant,
+                "assistant_id" to properties?.assistant,
                 "thread" to mapOf(
                     "messages" to listOf(
                         mapOf(

@@ -14,5 +14,5 @@ data class UserEntity(@Id
                       val id: String,
                       var name: String,
                       var lastname: String,
-                      var birthday: LocalDate,
+                      var birthday: LocalDate?,
                       var email: String  )

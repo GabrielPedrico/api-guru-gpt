@@ -1,68 +1,195 @@
 package com.openai.guru.adapter.http.spring.controller
 
-import com.openai.guru.adapter.broker.delivery.NumerologyMapService
+import com.openai.guru.adapter.datastore.entities.UserEntity
+import com.openai.guru.adapter.datastore.repositories.UserRepository
+import com.openai.guru.adapter.http.adapters.external.SendMessageGptAdapter
 import com.openai.guru.adapter.http.spring.dto.UserDto
 import com.openai.guru.adapter.http.spring.dto.request.CreateMapRequest
+import com.openai.guru.adapter.http.spring.dto.response.ThreadResponseDto
 import com.openai.guru.adapter.http.spring.dto.response.error.ErrorResponse
 import com.openai.guru.core.exceptions.SendGPTException
-import org.junit.jupiter.api.Assertions.assertThrows
-import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
-import org.mockito.InjectMocks
-import org.mockito.Mock
 import org.mockito.Mockito.`when`
-import org.mockito.MockitoAnnotations
-import org.springframework.http.HttpStatus
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment
+import org.springframework.boot.test.mock.mockito.MockBean
+import org.springframework.boot.test.web.client.TestRestTemplate
+import org.springframework.http.*
 import org.springframework.test.context.TestPropertySource
-import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.setup.MockMvcBuilders
-import java.time.LocalDateTime
+import java.net.URI
+import java.time.LocalDate
 import java.util.*
 
-@TestPropertySource(properties = ["openai.api=https://dummy-tests-openai/v1/threads/",
-                                  "openai.assistant=asst_LIoCauDKaPo7YBDIonAKXg91",
-                                  "openai.token=Bearer dummytoken123456",
-                                  "openai.header=dummyheader"
-
+@TestPropertySource(properties = [
+    "openai.api=https://dummy-tests-openai/v1/threads/",
+    "openai.assistant=asst_LIoCauDKaPo7YBDIonAKXg91",
+    "openai.token=Bearer dummytoken123456",
+    "openai.header=dummyheader"
 ])
-class CreateNumerologyMapControllerTest {
+@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
+class CreateNumerologyMapControllerTest @Autowired constructor(
+    private val restTemplate: TestRestTemplate
+) {
 
-    private lateinit var mockMvc: MockMvc
+    @Autowired
+    private lateinit var userRepository: UserRepository
 
-    @Mock
-    private lateinit var numerologyMapService: NumerologyMapService
+    @MockBean
+    private lateinit var sendMessageGptAdapter: SendMessageGptAdapter
 
-    @InjectMocks
-    private lateinit var createNumerologyMapController: CreateNumerologyMapController
+    @Test
+    fun `test createNumerologyMap success`() {
 
-    @BeforeEach
-    fun setUp() {
-        MockitoAnnotations.openMocks(this)
-        mockMvc = MockMvcBuilders.standaloneSetup(createNumerologyMapController).build()
+        val user = UserEntity(
+            id = UUID.randomUUID().toString(),
+            name = "John",
+            lastname = "Doe",
+            birthday = LocalDate.of(1990, 1, 1),
+            email = "john.doe@example.com"
+        )
+        userRepository.save(user)
+
+        val request = CreateMapRequest(userId = UUID.fromString(user.id))
+
+        val headers = HttpHeaders()
+        headers.contentType = MediaType.APPLICATION_JSON
+        headers.set("correlation_id", UUID.randomUUID().toString())
+
+        `when`(sendMessageGptAdapter.createNumerologyMap(user)).thenReturn(ThreadResponseDto("thread_gdTBaeDCwRrjAOBI0C5vNCsQ",1704608683L,"queued"))
+
+        val response: ResponseEntity<String> = restTemplate.exchange(
+            URI("/numerology_map"),
+            HttpMethod.POST,
+            HttpEntity(request,headers),
+            String::class.java
+        )
+
+        val responseBody = response.body
+
+        assertEquals(HttpStatus.CREATED, response.statusCode)
+        assertEquals(responseBody,"{\"thread_id\":\"thread_gdTBaeDCwRrjAOBI0C5vNCsQ\",\"created_at\":1704608683,\"status\":\"queued\"}")
     }
 
     @Test
-    fun testCreateNumerologyMapError() {
-        // Given
-        val correlationId = "correlationId"
-        val request = CreateMapRequest(UUID.fromString("f4c90c33-07f6-4e83-8dfe-bbb536d9e25e"))
+    fun `test createNumerologyMap UserNotFoundError`() {
 
-        `when`(numerologyMapService.createMap(request)).thenThrow(SendGPTException(createErrorResponse()))
+        val user = UserEntity(
+            id = UUID.randomUUID().toString(),
+            name = "John",
+            lastname = "Doe",
+            birthday = LocalDate.of(1990, 1, 1),
+            email = "john.doe@example.com"
+        )
 
-        // When & Then
-        assertThrows(SendGPTException::class.java) {
-            createNumerologyMapController.createNumerologyMap(correlationId, request)
-        }
+        val request = CreateMapRequest(userId = UUID.fromString(user.id))
+
+        val headers = HttpHeaders()
+        headers.contentType = MediaType.APPLICATION_JSON
+        headers.set("correlation_id", UUID.randomUUID().toString())
+
+        `when`(sendMessageGptAdapter.createNumerologyMap(user)).thenReturn(ThreadResponseDto("thread_gdTBaeDCwRrjAOBI0C5vNCsQ",1704608683L,"queued"))
+
+        val response: ResponseEntity<String> = restTemplate.exchange(
+            URI("/numerology_map"),
+            HttpMethod.POST,
+            HttpEntity(request,headers),
+            String::class.java
+        )
+
+        val responseBody = response.body
+
+        assertEquals(HttpStatus.NOT_FOUND, response.statusCode)
     }
 
-    private fun createErrorResponse(): ErrorResponse {
-        return ErrorResponse(
-            id = "errorId",
-            timestamp = LocalDateTime.now(),
-            message = "Error occurred",
-            statusCode = HttpStatus.INTERNAL_SERVER_ERROR.value(),
-            endpoint = "/api/createNumerologyMap",
-            user = UserDto(id = "userId", name = "John Doe", email = "john@example.com")
+    @Test
+    fun `test createNumerologyMap SendGptError`() {
+
+        val user = UserEntity(
+            id = UUID.randomUUID().toString(),
+            name = "John",
+            lastname = "Doe",
+            birthday = LocalDate.of(1990, 1, 1),
+            email = "john.doe@example.com"
         )
+
+        userRepository.save(user)
+
+        val request = CreateMapRequest(userId = UUID.fromString(user.id))
+
+        val headers = HttpHeaders()
+        headers.contentType = MediaType.APPLICATION_JSON
+        headers.set("correlation_id", UUID.randomUUID().toString())
+
+        `when`(sendMessageGptAdapter.createNumerologyMap(user)).thenThrow(
+            SendGPTException(
+                ErrorResponse(null,null,"Não foi possível realizar chamada ao OPENAI",null,null,
+                    UserDto(user.id,user.name,user.email)
+                )
+            ))
+
+        val response: ResponseEntity<String> = restTemplate.exchange(
+            URI("/numerology_map"),
+            HttpMethod.POST,
+            HttpEntity(request,headers),
+            String::class.java
+        )
+
+        val responseBody = response.body
+        assertEquals(HttpStatus.REQUEST_TIMEOUT, response.statusCode)
+    }
+
+    @Test
+    fun `test createNumerologyMap InvalidRequestError`() {
+
+        val headers = HttpHeaders()
+        headers.contentType = MediaType.APPLICATION_JSON
+        headers.set("correlation_id", UUID.randomUUID().toString())
+
+        val response: ResponseEntity<String> = restTemplate.exchange(
+            URI("/numerology_map"),
+            HttpMethod.POST,
+            HttpEntity(null,headers),
+            String::class.java
+        )
+
+        val responseBody = response.body
+        assertEquals(HttpStatus.BAD_REQUEST, response.statusCode)
+    }
+
+    @Test
+    fun `test createNumerologyMap UnexpectErrorDefaultTreament`() {
+
+        val user = UserEntity(
+            id = UUID.randomUUID().toString(),
+            name = "John",
+            lastname = "Doe",
+            birthday = LocalDate.of(1990, 1, 1),
+            email = "john.doe@example.com"
+        )
+
+        userRepository.save(user)
+
+        val request = CreateMapRequest(userId = UUID.fromString(user.id))
+
+        val headers = HttpHeaders()
+        headers.contentType = MediaType.APPLICATION_JSON
+        headers.set("correlation_id", UUID.randomUUID().toString())
+
+        `when`(sendMessageGptAdapter.createNumerologyMap(user)).thenThrow(
+            IllegalArgumentException("Erro inesperado ocorreu no fluxo")
+            )
+
+        val response: ResponseEntity<String> = restTemplate.exchange(
+            URI("/numerology_map"),
+            HttpMethod.POST,
+            HttpEntity(request,headers),
+            String::class.java
+        )
+
+        val responseBody = response.body
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.statusCode)
     }
 }
+
