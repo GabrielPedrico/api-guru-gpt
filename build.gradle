@@ -56,9 +56,9 @@ tasks.withType(KotlinCompile).configureEach {
 // START OF SONAR MULTI-MODULE CONFIGURATION
 sonarqube {
 	properties {
-		property "sonar.projectKey", "Lukinhasssss_catalogo-de-videos"
-		property "sonar.projectName", "catalogo-de-videos"
-		property "sonar.organization", "lukinhasssss"
+		property "sonar.projectKey", "GabrielPedrico_api-guru-gpt"
+		property "sonar.projectName", "api-guru-gpt"
+		property "sonar.organization", "gabrielpedrico"
 		property "sonar.host.url", "https://sonarcloud.io"
 		property "sonar.coverage.jacoco.xmlReportPaths", "${project.parent.file('build/reports/jacoco/test/jacocoTestReport.xml').path}"
 		property "sonar.exclusions", "build/generated/**/*"
