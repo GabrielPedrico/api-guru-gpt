@@ -43,21 +43,21 @@ class CreateNumerologyMapControllerTest @Autowired constructor(
     fun `test createNumerologyMap success`() {
 
         val user = UserEntity(
-            id = UUID.randomUUID().toString(),
+            id = "",
             name = "John",
             lastname = "Doe",
             birthday = LocalDate.of(1990, 1, 1),
             email = "john.doe@example.com"
         )
-        userRepository.save(user)
+        val userCreated = userRepository.save(user)
 
-        val request = CreateMapRequest(userId = UUID.fromString(user.id))
+        val request = CreateMapRequest(userId = UUID.fromString(userCreated.id))
 
         val headers = HttpHeaders()
         headers.contentType = MediaType.APPLICATION_JSON
         headers.set("correlation_id", UUID.randomUUID().toString())
 
-        `when`(sendMessageGptAdapter.createNumerologyMap(user)).thenReturn(ThreadResponseDto("thread_gdTBaeDCwRrjAOBI0C5vNCsQ",1704608683L,"queued"))
+        `when`(sendMessageGptAdapter.createNumerologyMap(userCreated)).thenReturn(ThreadResponseDto("thread_gdTBaeDCwRrjAOBI0C5vNCsQ",1704608683L,"queued"))
 
         val response: ResponseEntity<String> = restTemplate.exchange(
             URI("/numerology_map"),
@@ -98,8 +98,6 @@ class CreateNumerologyMapControllerTest @Autowired constructor(
             String::class.java
         )
 
-        val responseBody = response.body
-
         assertEquals(HttpStatus.NOT_FOUND, response.statusCode)
     }
 
@@ -114,15 +112,15 @@ class CreateNumerologyMapControllerTest @Autowired constructor(
             email = "john.doe@example.com"
         )
 
-        userRepository.save(user)
+        val userCreated = userRepository.save(user)
 
-        val request = CreateMapRequest(userId = UUID.fromString(user.id))
+        val request = CreateMapRequest(userId = UUID.fromString(userCreated.id))
 
         val headers = HttpHeaders()
         headers.contentType = MediaType.APPLICATION_JSON
         headers.set("correlation_id", UUID.randomUUID().toString())
 
-        `when`(sendMessageGptAdapter.createNumerologyMap(user)).thenThrow(
+        `when`(sendMessageGptAdapter.createNumerologyMap(userCreated)).thenThrow(
             SendGPTException(
                 ErrorResponse(null,null,"Não foi possível realizar chamada ao OPENAI",null,null,
                     UserDto(user.id,user.name,user.email)
@@ -136,7 +134,6 @@ class CreateNumerologyMapControllerTest @Autowired constructor(
             String::class.java
         )
 
-        val responseBody = response.body
         assertEquals(HttpStatus.REQUEST_TIMEOUT, response.statusCode)
     }
 
@@ -154,7 +151,6 @@ class CreateNumerologyMapControllerTest @Autowired constructor(
             String::class.java
         )
 
-        val responseBody = response.body
         assertEquals(HttpStatus.BAD_REQUEST, response.statusCode)
     }
 
@@ -169,9 +165,9 @@ class CreateNumerologyMapControllerTest @Autowired constructor(
             email = "john.doe@example.com"
         )
 
-        userRepository.save(user)
+        val userCreated = userRepository.save(user)
 
-        val request = CreateMapRequest(userId = UUID.fromString(user.id))
+        val request = CreateMapRequest(userId = UUID.fromString(userCreated.id))
 
         val headers = HttpHeaders()
         headers.contentType = MediaType.APPLICATION_JSON
@@ -187,8 +183,6 @@ class CreateNumerologyMapControllerTest @Autowired constructor(
             HttpEntity(request,headers),
             String::class.java
         )
-
-        val responseBody = response.body
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.statusCode)
     }
 }

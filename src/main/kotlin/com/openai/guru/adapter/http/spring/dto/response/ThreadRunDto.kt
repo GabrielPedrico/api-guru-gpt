@@ -8,23 +8,33 @@ data class ThreadRunDto(
     @JsonProperty("object")
     val objectType: String,
     @JsonFormat(shape = JsonFormat.Shape.NUMBER)
-    val created_at: Long,
-    val assistant_id: String,
-    val thread_id: String,
+    @JsonProperty("created_at")
+    val createdAt: Long,
+    @JsonProperty("assistant_id")
+    val assistantId: String,
+    @JsonProperty("thread_id")
+    val threadId: String,
     val status: String,
     @JsonFormat(shape = JsonFormat.Shape.NUMBER)
-    val started_at: Long?,
+    @JsonProperty("started_at")
+    val startedAt: Long?,
     @JsonFormat(shape = JsonFormat.Shape.NUMBER)
-    val expires_at: Long?,
-    val cancelled_at: Long?,
-    val failed_at: Long?,
+    @JsonProperty("expires_at")
+    val expiresAt: Long?,
+    @JsonProperty("cancelled_at")
+    val cancelledAt: Long?,
+    @JsonProperty("failed_at")
+    val failedAt: Long?,
     @JsonFormat(shape = JsonFormat.Shape.NUMBER)
-    val completed_at: Long?,
-    val last_error: String?,
+    @JsonProperty("completed_at")
+    val completedAt: Long?,
+    @JsonProperty("last_error")
+    val lastError: String?,
     val model: String,
     val instructions: String,
     val tools: List<ToolsDto>,
-    val file_ids: List<String>,
+    @JsonProperty("file_ids")
+    val fileIds: List<String>,
     val metadata: Map<String, Any>
 )
 

@@ -14,9 +14,9 @@ class CreateMapAdapter (val repository: UserRepository,
                         val gptSender: SendMessageGptPortOut) : CreateNumerologyMapPortOut {
 
     override fun createMap(userId: UUID):ThreadResponseModel {
-        var user = repository.findById(userId.toString()).orElseThrow { UserNotFoundException(ErrorResponse(null,null,"Usuário não encontrado com ID: $userId",null,null,null)) }
-        var response = gptSender.createNumerologyMap(user)
-        return ThreadResponseModel(response.threadId,response.created_at,response.status)
+        val user = repository.findById(userId.toString()).orElseThrow { UserNotFoundException(ErrorResponse(null,null,"Usuário não encontrado com ID: $userId",null,null,null)) }
+        val response = gptSender.createNumerologyMap(user)
+        return ThreadResponseModel(response.threadId,response.createdAt,response.status)
 
     }
 }

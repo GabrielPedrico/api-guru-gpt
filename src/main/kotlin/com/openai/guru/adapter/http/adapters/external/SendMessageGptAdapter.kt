@@ -1,7 +1,6 @@
 package com.openai.guru.adapter.http.adapters.external
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.openai.guru.adapter.datastore.entities.UserEntity
 import com.openai.guru.adapter.http.spring.dto.UserDto
 import com.openai.guru.adapter.http.spring.dto.response.ThreadResponseDto
@@ -25,19 +24,19 @@ class SendMessageGptAdapter (val properties:OpenAIProperties,
         val requestEntity = HttpEntity(requestBody, headers)
         val responseEntity = restTemplate.postForEntity(endpoint, requestEntity, ThreadRunDto::class.java)
         if(!responseEntity.statusCode.is2xxSuccessful) throw SendGPTException(ErrorResponse(null,null,"Não foi possível realizar chamada ao OPENAI",responseEntity.statusCode.value(),null,UserDto(user.id,user.name,user.email)))
-        return ThreadResponseDto(responseEntity.body?.thread_id,responseEntity.body?.created_at,responseEntity.body?.status)
+        return ThreadResponseDto(responseEntity.body?.threadId,responseEntity.body?.createdAt,responseEntity.body?.status)
     }
 
     private fun createRequest(user: UserEntity): Triple<String, HttpHeaders, String> {
-        val endpoint = properties?.api + endpoint
+        val endpoint = properties.api + endpoint
         val headers = HttpHeaders()
         headers.contentType = MediaType.APPLICATION_JSON
-        headers.set("OpenAI-Beta", properties?.header)
-        headers.set("Authorization", properties?.token)
-        val objectMapper = ObjectMapper().registerModule(KotlinModule())
+        headers.set("OpenAI-Beta", properties.header)
+        headers.set("Authorization", properties.token)
+        val objectMapper = ObjectMapper().findAndRegisterModules()
         val requestBody = objectMapper.writeValueAsString(
             mapOf(
-                "assistant_id" to properties?.assistant,
+                "assistant_id" to properties.assistant,
                 "thread" to mapOf(
                     "messages" to listOf(
                         mapOf(
