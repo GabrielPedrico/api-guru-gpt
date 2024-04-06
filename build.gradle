@@ -8,6 +8,7 @@ plugins {
 	id 'org.jetbrains.kotlin.plugin.jpa' version '1.9.21'
 	id 'java'
 	id 'jacoco'
+	id 'org.sonarqube' version '3.3' // Replace '3.3' with the correct SonarQube plugin version
 
 }
 
@@ -51,6 +52,27 @@ tasks.withType(KotlinCompile).configureEach {
 		jvmTarget = '17'
 	}
 }
+
+// START OF SONAR MULTI-MODULE CONFIGURATION
+sonarqube {
+	properties {
+		property "sonar.projectKey", "Lukinhasssss_catalogo-de-videos"
+		property "sonar.projectName", "catalogo-de-videos"
+		property "sonar.organization", "lukinhasssss"
+		property "sonar.host.url", "https://sonarcloud.io"
+		property "sonar.coverage.jacoco.xmlReportPaths", "${project.parent.file('build/reports/jacoco/test/jacocoTestReport.xml').path}"
+		property "sonar.exclusions", "build/generated/**/*"
+	}
+}
+
+subprojects {
+	sonarqube {
+		properties {
+			property "sonar.coverage.jacoco.xmlReportPaths", "${project.parent.file('build/reports/jacoco/test/jacocoTestReport.xml').path}"
+		}
+	}
+}
+
 
 tasks.named('test') {
 	useJUnitPlatform()

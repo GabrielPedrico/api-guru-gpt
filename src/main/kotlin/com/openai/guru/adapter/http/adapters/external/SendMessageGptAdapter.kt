@@ -31,8 +31,8 @@ class SendMessageGptAdapter (val properties:OpenAIProperties,
         val endpoint = properties.api + endpoint
         val headers = HttpHeaders()
         headers.contentType = MediaType.APPLICATION_JSON
-        headers.set("OpenAI-Beta", properties.header)
-        headers.set("Authorization", properties.token)
+        headers.add("OpenAI-Beta", properties.header)
+        headers.add("Authorization", properties.token)
         val objectMapper = ObjectMapper().findAndRegisterModules()
         val requestBody = objectMapper.writeValueAsString(
             mapOf(
