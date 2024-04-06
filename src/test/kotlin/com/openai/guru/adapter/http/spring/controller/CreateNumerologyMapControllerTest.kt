@@ -44,10 +44,10 @@ class CreateNumerologyMapControllerTest @Autowired constructor(
 
         val user = UserEntity(
             id = "",
-            name = "John",
-            lastname = "Doe",
+            name = "Gabriel",
+            lastname = "Pedrico",
             birthday = LocalDate.of(1990, 1, 1),
-            email = "john.doe@example.com"
+            email = "pedripedrio@example.com"
         )
         val userCreated = userRepository.save(user)
 

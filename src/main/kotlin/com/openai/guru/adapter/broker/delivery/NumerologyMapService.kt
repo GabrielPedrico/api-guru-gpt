@@ -12,6 +12,6 @@ class NumerologyMapService(val createNumerologyMapPortIn: CreateNumerologyMapPor
 
     fun createMap(request: CreateMapRequest): ResponseEntity<ThreadResponseDto> {
         val response = createNumerologyMapPortIn.createNumerologyMap(request.userId)
-        return ResponseEntity.status(HttpStatus.CREATED).body(ThreadResponseDto(response.threadId, response.created_at, response.status))
+        return ResponseEntity.status(HttpStatus.CREATED).body(ThreadResponseDto(response.threadId, response.createdAt, response.status))
     }
 }

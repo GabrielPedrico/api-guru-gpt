@@ -6,6 +6,31 @@ plugins {
 	id 'org.jetbrains.kotlin.jvm' version '1.9.21'
 	id 'org.jetbrains.kotlin.plugin.spring' version '1.9.21'
 	id 'org.jetbrains.kotlin.plugin.jpa' version '1.9.21'
+	id 'java'
+	id 'jacoco'
+	id "org.sonarqube" version "5.0.0.4638" // Replace '3.3' with the correct SonarQube plugin version
+
+}
+
+apply plugin: 'java'
+apply plugin: 'jacoco'
+
+jacoco {
+	toolVersion = "0.8.7" // Use the desired JaCoCo version
+}
+
+test {
+	finalizedBy jacocoTestReport // ensures the report is generated after tests run
+}
+
+jacocoTestReport {
+	dependsOn test // makes the report task depend on the successful completion of the test task
+
+	reports {
+		xml.required = true
+		html.required = true // Enable HTML report generation (optional)
+		csv.required = false // Disable CSV report (optional)
+	}
 }
 
 group = 'com.openai'
@@ -48,6 +73,19 @@ tasks.withType(KotlinCompile).configureEach {
 		jvmTarget = '17'
 	}
 }
+
+// START OF SONAR MULTI-MODULE CONFIGURATION
+sonarqube {
+	properties {
+		property "sonar.projectKey", "GabrielPedrico_api-guru-gpt"
+		property "sonar.projectName", "api-guru-gpt"
+		property "sonar.organization", "gabrielpedrico"
+		property "sonar.host.url", "https://sonarcloud.io"
+		property "sonar.coverage.jacoco.xmlReportPaths", "build/reports/jacoco/test/jacocoTestReport.xml"
+		property "sonar.exclusions", "build/generated/**/*"
+	}
+}
+
 
 tasks.named('test') {
 	useJUnitPlatform()
