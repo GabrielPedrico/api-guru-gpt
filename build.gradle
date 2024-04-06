@@ -12,6 +12,27 @@ plugins {
 
 }
 
+apply plugin: 'java'
+apply plugin: 'jacoco'
+
+jacoco {
+	toolVersion = "0.8.7" // Use the desired JaCoCo version
+}
+
+test {
+	finalizedBy jacocoTestReport // ensures the report is generated after tests run
+}
+
+jacocoTestReport {
+	dependsOn test // makes the report task depend on the successful completion of the test task
+
+	reports {
+		xml.required = true
+		html.required = true // Enable HTML report generation (optional)
+		csv.required = false // Disable CSV report (optional)
+	}
+}
+
 group = 'com.openai'
 version = '0.0.1-SNAPSHOT'
 
@@ -60,16 +81,8 @@ sonarqube {
 		property "sonar.projectName", "api-guru-gpt"
 		property "sonar.organization", "gabrielpedrico"
 		property "sonar.host.url", "https://sonarcloud.io"
-		property "sonar.coverage.jacoco.xmlReportPaths", "${project.parent.file('build/reports/jacoco/test/jacocoTestReport.xml').path}"
+		property "sonar.coverage.jacoco.xmlReportPaths", "build/reports/jacoco/test/jacocoTestReport.xml"
 		property "sonar.exclusions", "build/generated/**/*"
-	}
-}
-
-subprojects {
-	sonarqube {
-		properties {
-			property "sonar.coverage.jacoco.xmlReportPaths", "${project.parent.file('build/reports/jacoco/test/jacocoTestReport.xml').path}"
-		}
 	}
 }
 
