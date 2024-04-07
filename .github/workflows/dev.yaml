@@ -4,9 +4,6 @@ on:
   push:
     branches:
       - feature/*
-  pull_request:
-    types:
-      - opened
 jobs:
   build:
     name: Gradle Build
@@ -91,13 +88,3 @@ jobs:
           pr_title: "Automated PR from ${{ env.BRANCH_NAME }}"
           pr_body: "New changes to ${{ env.BRANCH_NAME }}. Check the files changed and merge if everything is ok."
           github_token: ${{ secrets.GITHUB_TOKEN }}
-  automerge:
-    needs: create-pull-request
-    name: Auto Merge
-    runs-on: ubuntu-latest
-    steps:
-      - name: automerge
-        uses: "pascalgn/automerge-action@v0.13.1"
-        env:
-          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-          BASE_BRANCHES: "develop"
