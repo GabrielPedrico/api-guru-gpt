@@ -14,12 +14,12 @@ import org.springframework.web.bind.annotation.RestController
 
 @Service
 @RestController
-@RequestMapping(produces	=	[MediaType.APPLICATION_JSON_VALUE])
-class CreateNumerologyMapController (val service : NumerologyMapService) {
+@RequestMapping(produces = [MediaType.APPLICATION_JSON_VALUE])
+class CreateNumerologyMapController(val service: NumerologyMapService) {
 
     @PostMapping("/numerology_map")
-    fun createNumerologyMap(@RequestHeader("correlation_id") correlationId: String,
-                            @RequestBody request : CreateMapRequest): ResponseEntity<ThreadResponseDto>{
-        return service.createMap(request)
-    }
+    fun createNumerologyMap(
+        @RequestHeader("correlation_id") correlationId: String,
+        @RequestBody request: CreateMapRequest
+    ): ResponseEntity<ThreadResponseDto> = service.createMap(request)
 }
