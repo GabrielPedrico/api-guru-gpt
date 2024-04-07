@@ -4,7 +4,9 @@ on:
   push:
     branches:
       - feature/*
-
+  pull_request:
+    types:
+      - opened
 jobs:
   build:
     name: Gradle Build
@@ -96,8 +98,6 @@ jobs:
     steps:
       - name: automerge
         uses: "pascalgn/automerge-action@v0.13.1"
-        with:
-          destination_branch: "develop"
         env:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
           BASE_BRANCHES: "develop"
