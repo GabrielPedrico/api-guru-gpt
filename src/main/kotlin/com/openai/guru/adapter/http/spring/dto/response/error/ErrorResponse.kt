@@ -6,20 +6,11 @@ import java.time.LocalDateTime
 import java.util.*
 
 data class ErrorResponse(
-    var id: String? = null,
-    var timestamp: LocalDateTime? = null,
-    val message: String?,
+    var id: String? = UUID.randomUUID().toString(),
+    var timestamp: LocalDateTime? = LocalDateTime.now(),
+    val message: String? = null,
     @JsonProperty("status_code")
-    val statusCode: Int?,
-    val endpoint: String?,
-    val user: UserDto?
-) {
-    init {
-        if (id == null) {
-            id = UUID.randomUUID().toString()
-        }
-        if (timestamp == null) {
-            timestamp = LocalDateTime.now()
-        }
-    }
-}
+    val statusCode: Int? = null,
+    val endpoint: String? = null,
+    val user: UserDto? = null
+)

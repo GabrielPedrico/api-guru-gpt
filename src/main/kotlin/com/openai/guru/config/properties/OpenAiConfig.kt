@@ -5,5 +5,4 @@ import org.springframework.context.annotation.Configuration
 
 @Configuration
 @EnableConfigurationProperties(OpenAIProperties::class)
-class OpenAiConfig {
-}
+class OpenAiConfig
