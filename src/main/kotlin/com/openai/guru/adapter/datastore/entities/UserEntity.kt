@@ -1,9 +1,12 @@
 package com.openai.guru.adapter.datastore.entities
 
-import jakarta.persistence.*
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.Id
+import jakarta.persistence.Table
 import org.hibernate.annotations.GenericGenerator
 import java.time.LocalDate
-import java.util.*
 
 @Entity
 @Table(name = "tb_user", schema = "public")
