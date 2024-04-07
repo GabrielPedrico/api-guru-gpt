@@ -3,7 +3,7 @@ name: Run build, test and sonar checks
 on:
   push:
     branches:
-      - feature*
+      - feature/*
 
 jobs:
   build:
