@@ -10,13 +10,18 @@ import org.springframework.stereotype.Component
 import java.util.*
 
 @Component
-class CreateMapAdapter (val repository: UserRepository,
-                        val gptSender: SendMessageGptPortOut) : CreateNumerologyMapPortOut {
+class CreateMapAdapter(
+    val repository: UserRepository,
+    val gptSender: SendMessageGptPortOut
+) : CreateNumerologyMapPortOut {
 
-    override fun createMap(userId: UUID):ThreadResponseModel {
-        val user = repository.findById(userId.toString()).orElseThrow { UserNotFoundException(ErrorResponse(null,null,"Usuário não encontrado com ID: $userId",null,null,null)) }
-        val response = gptSender.createNumerologyMap(user)
-        return ThreadResponseModel(response.threadId,response.createdAt,response.status)
+    override fun createMap(userId: UUID): ThreadResponseModel {
+        val user = repository.findById(userId.toString()).orElseThrow {
+            UserNotFoundException(ErrorResponse(message = "Usuário não encontrado com ID: $userId"))
+        }
 
+        return gptSender.createNumerologyMap(user).run {
+            ThreadResponseModel(threadId = threadId, createdAt = createdAt, status = status)
+        }
     }
 }

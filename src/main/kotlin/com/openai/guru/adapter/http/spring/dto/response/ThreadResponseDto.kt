@@ -10,4 +10,4 @@ data class ThreadResponseDto(
     @JsonProperty("created_at")
     val createdAt: Long?,
     val status: String?
-) {}
+)

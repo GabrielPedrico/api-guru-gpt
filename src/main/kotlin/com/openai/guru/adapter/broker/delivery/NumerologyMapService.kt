@@ -8,10 +8,15 @@ import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 
 @Service
-class NumerologyMapService(val createNumerologyMapPortIn: CreateNumerologyMapPortIn) {
+class NumerologyMapService(
+    val createNumerologyMapPortIn: CreateNumerologyMapPortIn
+) {
 
     fun createMap(request: CreateMapRequest): ResponseEntity<ThreadResponseDto> {
-        val response = createNumerologyMapPortIn.createNumerologyMap(request.userId)
-        return ResponseEntity.status(HttpStatus.CREATED).body(ThreadResponseDto(response.threadId, response.createdAt, response.status))
+        val response = createNumerologyMapPortIn.createNumerologyMap(request.userId).let {
+            ResponseEntity.status(HttpStatus.CREATED).body(ThreadResponseDto(it.threadId, it.createdAt, it.status))
+        }
+
+        return response
     }
 }

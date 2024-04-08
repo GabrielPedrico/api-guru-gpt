@@ -6,12 +6,14 @@ import java.util.UUID
 
 @Entity
 @Table(name = "tb_map", schema = "public")
-data class MapEntity(@Id
-                     @GeneratedValue(generator = "UUID")
-                     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
-                     @Column(unique = true,columnDefinition="VARCHAR(40)")
-                     val id : UUID,
-                     @Column(columnDefinition="VARCHAR(5000)")
-                     var numerologyMap : String,
-                     @OneToOne
-                     val user: UserEntity)
+data class MapEntity(
+    @Id
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
+    @Column(unique = true, columnDefinition = "VARCHAR(40)")
+    val id: UUID,
+    @Column(columnDefinition = "VARCHAR(5000)")
+    var numerologyMap: String,
+    @OneToOne
+    val user: UserEntity
+)
