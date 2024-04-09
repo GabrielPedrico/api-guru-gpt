@@ -5,6 +5,6 @@ import org.springframework.http.HttpStatus
 
 class SendGPTException(errorReponse: ErrorResponse): HttpException(errorReponse) {
 
-    override fun getHttpStatus() =
+    override fun getHttpStatus(): HttpStatus =
         HttpStatus.valueOf(getErrorResponse().statusCode ?: HttpStatus.REQUEST_TIMEOUT.value())
 }

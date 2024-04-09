@@ -25,12 +25,19 @@ class SendMessageGptAdapter(
 
     override fun createNumerologyMap(user: UserEntity): ThreadResponseDto {
         val requestEntity = createRequest(user)
-        val responseEntity = restTemplate.postForEntity(endpoint, requestEntity, ThreadRunDto::class.java)
-
-        return handleResponse(responseEntity, user)
+        val responseEntity = runCatching {
+            callOpenAI(requestEntity)
+        }.getOrElse { exception ->
+            // Aqui você lança a exceção personalizada em caso de erro
+            throw SendGPTException(ErrorResponse(message = "Error while communicating with OPENAI: ${exception.message}"))
+        }
+        return handleResponse(responseEntity)
     }
 
-    private fun createRequest(user: UserEntity): HttpEntity<String> {
+    fun callOpenAI(requestEntity: HttpEntity<String>): ResponseEntity<ThreadRunDto> =
+        restTemplate.postForEntity(endpoint, requestEntity, ThreadRunDto::class.java)
+
+    fun createRequest(user: UserEntity): HttpEntity<String> {
         val headers = HttpHeaders().apply {
             contentType = MediaType.APPLICATION_JSON
             add("OpenAI-Beta", properties.header)
@@ -57,19 +64,12 @@ class SendMessageGptAdapter(
     private fun createContent(user: UserEntity) =
         "Nome Completo: ${user.name} ${user.lastname} , Data Nascimento: ${user.birthday} , De acordo com suas instruções monte o mapa numerologico desse individuo com as informações dadas entrando em detalhes profundos de suas características, ao final reuna todas as informações em unico texto que detalha todos os pontos do mapa numerologico com insights personalizados e direcionados para esse individuo conforme suas instruções de execução."
 
-    private fun handleResponse(responseEntity: ResponseEntity<ThreadRunDto>, user: UserEntity): ThreadResponseDto = with(responseEntity) {
-        if (!statusCode.is2xxSuccessful) throw SendGPTException(
-            ErrorResponse(
-                message = "Não foi possível realizar chamada ao OPENAI",
-                statusCode = statusCode.value(),
-                user = UserDto(user.id, user.name, user.email)
+    private fun handleResponse(responseEntity: ResponseEntity<ThreadRunDto>): ThreadResponseDto =
+        with(responseEntity) {
+            ThreadResponseDto(
+                body?.threadId,
+                body?.createdAt,
+                body?.status
             )
-        )
-
-        ThreadResponseDto(
-            body?.threadId,
-            body?.createdAt,
-            body?.status
-        )
-    }
+        }
 }

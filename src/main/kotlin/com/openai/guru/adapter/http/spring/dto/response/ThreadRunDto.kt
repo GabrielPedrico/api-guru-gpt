@@ -4,39 +4,40 @@ import com.fasterxml.jackson.annotation.JsonFormat
 import com.fasterxml.jackson.annotation.JsonProperty
 
 data class ThreadRunDto(
-    val id: String,
+    val id: String = "",
     @JsonProperty("object")
-    val objectType: String,
+    val objectType: String = "",
     @JsonFormat(shape = JsonFormat.Shape.NUMBER)
     @JsonProperty("created_at")
     val createdAt: Long,
     @JsonProperty("assistant_id")
-    val assistantId: String,
+    val assistantId: String = "",
     @JsonProperty("thread_id")
     val threadId: String,
     val status: String,
     @JsonFormat(shape = JsonFormat.Shape.NUMBER)
     @JsonProperty("started_at")
-    val startedAt: Long?,
+    val startedAt: Long? = null,
     @JsonFormat(shape = JsonFormat.Shape.NUMBER)
     @JsonProperty("expires_at")
-    val expiresAt: Long?,
+    val expiresAt: Long? = null,
     @JsonProperty("cancelled_at")
-    val cancelledAt: Long?,
+    val cancelledAt: Long? = null,
     @JsonProperty("failed_at")
-    val failedAt: Long?,
+    val failedAt: Long? = null,
     @JsonFormat(shape = JsonFormat.Shape.NUMBER)
     @JsonProperty("completed_at")
-    val completedAt: Long?,
+    val completedAt: Long? = null,
     @JsonProperty("last_error")
-    val lastError: String?,
-    val model: String,
-    val instructions: String,
-    val tools: List<ToolsDto>,
+    val lastError: String? = null,
+    val model: String = "",
+    val instructions: String = "",
+    val tools: List<ToolsDto> = emptyList(),
     @JsonProperty("file_ids")
-    val fileIds: List<String>,
-    val metadata: Map<String, Any>
+    val fileIds: List<String> = emptyList(),
+    val metadata: Map<String, Any> = emptyMap()
 )
+
 
 data class ToolsDto(
     val type: String
