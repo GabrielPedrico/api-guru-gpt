@@ -11,49 +11,39 @@ import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler
 
 @ControllerAdvice
-class AdviceControllerConfig(private val request: HttpServletRequest) : ResponseEntityExceptionHandler() {
+class AdviceControllerConfig(
+    private val request: HttpServletRequest
+) : ResponseEntityExceptionHandler() {
 
     @ExceptionHandler(HttpException::class)
-    protected fun handleHttpExceptions(throwable: HttpException): ResponseEntity<ErrorResponse> {
-        val response = throwable.getErrorResponse()
-        return ResponseEntity.status(throwable.getHttpStatus()).body(buildErrorApiResponse(response.message,throwable.getHttpStatus().value(),response.user))
-    }
+    protected fun handleHttpExceptions(throwable: HttpException): ResponseEntity<ErrorResponse> =
+        throwable.getErrorResponse().let {
+            ResponseEntity.status(throwable.getHttpStatus()).body(buildErrorApiResponse(it.message, throwable.getHttpStatus().value(), it.user))
+        }
 
     // Tratamento padrão para outros erros
     @ExceptionHandler(Exception::class)
-    protected fun handleException(throwable: Throwable): ResponseEntity<ErrorResponse> {
-        val httpStatus = HttpStatus.INTERNAL_SERVER_ERROR
-        return ResponseEntity.status(httpStatus).body(buildErrorApiResponse(throwable.message,httpStatus))
-    }
+    protected fun handleException(throwable: Throwable): ResponseEntity<ErrorResponse> =
+        HttpStatus.INTERNAL_SERVER_ERROR.let {
+            ResponseEntity.status(it).body(buildErrorApiResponse(throwable.message, it))
+        }
 
     private fun buildErrorApiResponse(
         message: String?,
         httpStatus: HttpStatus,
-    ): ErrorResponse {
-        return ErrorResponse(null, null,message,httpStatus.value(),getPathUri(),null)
-    }
+    ) = ErrorResponse(message = message, statusCode = httpStatus.value(), endpoint = getPathUri())
 
     private fun buildErrorApiResponse(
         message: String?,
         httpStatus: Int?,
         user: UserDto?
-    ): ErrorResponse {
-        return ErrorResponse(null, null,message,httpStatus,getPathUri(),user)
-    }
+    ) = ErrorResponse(message = message, statusCode = httpStatus, endpoint = getPathUri(), user = user)
 
-    private fun getPathUri(): String {
-        return getFullRouteRequest()
-    }
+    private fun getPathUri() = getFullRouteRequest()
 
-    fun getVerbMethodRequest(): String {
-        return request.method
-    }
+    fun getVerbMethodRequest(): String = request.method
 
-    fun pathRequestUri(): String {
-        return request.requestURI.substring(request.contextPath.length)
-    }
+    fun pathRequestUri() = request.requestURI.substring(request.contextPath.length)
 
-    fun getFullRouteRequest(): String {
-        return "{${getVerbMethodRequest()}}${pathRequestUri()}"
-    }
+    fun getFullRouteRequest(): String = "{${getVerbMethodRequest()}}${pathRequestUri()}"
 }

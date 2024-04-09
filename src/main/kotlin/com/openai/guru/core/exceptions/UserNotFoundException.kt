@@ -5,7 +5,5 @@ import org.springframework.http.HttpStatus
 
 class UserNotFoundException(errorReponse: ErrorResponse) : HttpException(errorReponse) {
 
-    override fun getHttpStatus(): HttpStatus {
-        return HttpStatus.NOT_FOUND
-    }
+    override fun getHttpStatus() = HttpStatus.NOT_FOUND
 }

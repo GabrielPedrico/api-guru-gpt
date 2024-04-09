@@ -1,49 +1,12 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 plugins {
+	id 'java'
+	id 'jacoco'
 	id 'org.springframework.boot' version '3.3.0-SNAPSHOT'
 	id 'io.spring.dependency-management' version '1.1.4'
 	id 'org.jetbrains.kotlin.jvm' version '1.9.21'
 	id 'org.jetbrains.kotlin.plugin.spring' version '1.9.21'
 	id 'org.jetbrains.kotlin.plugin.jpa' version '1.9.21'
-	id 'java'
-	id 'jacoco'
 	id "org.sonarqube" version "5.0.0.4638" // Replace '3.3' with the correct SonarQube plugin version
-
-}
-
-apply plugin: 'java'
-apply plugin: 'jacoco'
-
-jacoco {
-	toolVersion = "0.8.7" // Use the desired JaCoCo version
-}
-
-test {
-	finalizedBy jacocoTestReport // ensures the report is generated after tests run
-}
-
-jacocoTestReport {
-	dependsOn test // makes the report task depend on the successful completion of the test task
-
-	reports {
-		xml.required = true
-		html.required = true // Enable HTML report generation (optional)
-		csv.required = false // Disable CSV report (optional)
-	}
-}
-
-group = 'com.openai'
-version = '0.0.1-SNAPSHOT'
-
-java {
-	sourceCompatibility = '17'
-}
-
-configurations {
-	compileOnly {
-		extendsFrom annotationProcessor
-	}
 }
 
 repositories {
@@ -63,14 +26,37 @@ dependencies {
 	implementation group: 'org.postgresql', name: 'postgresql', version: '42.7.2'
 	testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '3.2.2'
 	testImplementation group: 'com.h2database', name: 'h2', version: '2.2.224'
-
-
 }
 
-tasks.withType(KotlinCompile).configureEach {
-	kotlinOptions {
-		freeCompilerArgs += '-Xjsr305=strict'
-		jvmTarget = '17'
+group = 'com.openai'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	sourceCompatibility = '17'
+}
+
+jacoco {
+	toolVersion = "0.8.7" // Use the desired JaCoCo version
+}
+
+test {
+	useJUnitPlatform()
+	finalizedBy jacocoTestReport // ensures the report is generated after tests run
+}
+
+jacocoTestReport {
+//	dependsOn test // makes the report task depend on the successful completion of the test task
+
+	reports {
+		xml.required = true
+		html.required = true // Enable HTML report generation (optional)
+		csv.required = false // Disable CSV report (optional)
+	}
+}
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
 	}
 }
 
@@ -84,9 +70,4 @@ sonarqube {
 		property "sonar.coverage.jacoco.xmlReportPaths", "build/reports/jacoco/test/jacocoTestReport.xml"
 		property "sonar.exclusions", "build/generated/**/*"
 	}
-}
-
-
-tasks.named('test') {
-	useJUnitPlatform()
 }

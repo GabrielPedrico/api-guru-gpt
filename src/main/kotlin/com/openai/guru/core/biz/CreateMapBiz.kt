@@ -7,9 +7,9 @@ import org.springframework.stereotype.Service
 import java.util.*
 
 @Service
-class CreateMapBiz (val portOut: CreateNumerologyMapPortOut) : CreateNumerologyMapPortIn {
+class CreateMapBiz(
+    val portOut: CreateNumerologyMapPortOut
+): CreateNumerologyMapPortIn {
 
-    override fun createNumerologyMap(userId: UUID):ThreadResponseModel {
-        return portOut.createMap(userId)
-    }
+    override fun createNumerologyMap(userId: UUID): ThreadResponseModel = portOut.createMap(userId)
 }
