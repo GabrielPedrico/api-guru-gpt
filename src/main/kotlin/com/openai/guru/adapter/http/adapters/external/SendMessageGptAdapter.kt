@@ -61,7 +61,7 @@ class SendMessageGptAdapter(
     }
 
     private fun createContent(user: UserEntity) =
-        "Nome Completo: ${user.name} ${user.lastname} , Data Nascimento: ${user.birthday} , De acordo com suas instruções monte o mapa numerologico desse individuo com as informações dadas entrando em detalhes profundos de suas características, ao final reuna todas as informações em unico texto que detalha todos os pontos do mapa numerologico com insights personalizados e direcionados para esse individuo conforme suas instruções de execução."
+        "Full Name: ${user.name} ${user.lastname}, Date of Birth: ${user.birthday}. According to your instructions, construct the numerological map of this individual with the given information, delving into deep details of their characteristics. In the end, gather all the information into a single text that details all points of the numerological map with personalized and targeted insights for this individual as per your execution instructions."
 
     private fun handleResponse(responseEntity: ResponseEntity<ThreadRunDto>): ThreadResponseDto =
         with(responseEntity) {
