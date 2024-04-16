@@ -5,5 +5,5 @@ import java.util.*
 
 fun interface CreateNumerologyMapPortOut {
 
-    fun createMap(userId : UUID) : ThreadResponseModel
+    fun createMap(userId: UUID,correlationId:String) : ThreadResponseModel
 }

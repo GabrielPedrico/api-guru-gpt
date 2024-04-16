@@ -3,6 +3,7 @@ package com.openai.guru.adapter.http.spring.controller
 import com.openai.guru.adapter.broker.delivery.NumerologyMapService
 import com.openai.guru.adapter.http.spring.dto.request.CreateMapRequest
 import com.openai.guru.adapter.http.spring.dto.response.ThreadResponseDto
+import org.slf4j.Logger
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
@@ -15,11 +16,15 @@ import org.springframework.web.bind.annotation.RestController
 @Service
 @RestController
 @RequestMapping(produces = [MediaType.APPLICATION_JSON_VALUE])
-class CreateNumerologyMapController(val service: NumerologyMapService) {
+class CreateNumerologyMapController(val service: NumerologyMapService,
+                                    val log:Logger) {
 
     @PostMapping("/numerology_map")
     fun createNumerologyMap(
         @RequestHeader("correlation_id") correlationId: String,
         @RequestBody request: CreateMapRequest
-    ): ResponseEntity<ThreadResponseDto> = service.createMap(request)
+    ): ResponseEntity<ThreadResponseDto> {
+        log.info("[GURU-GPT][CORRELATION-ID:{$correlationId}] Starting GURU-GPT for Resource /numerology_map request:${request}[GURU-GPT]")
+        return service.createMap(request,correlationId).also { log.info("[GURU-GPT][CORRELATION-ID:{$correlationId}] Requested a numerology map for user_id:${request.userId}[GURU-GPT]") }
+    }
 }

@@ -6,4 +6,6 @@ import org.springframework.validation.annotation.Validated
 import java.util.UUID
 
 @Validated
-data class CreateMapRequest(@JsonProperty("user_id") @NotNull val userId: UUID)
+data class CreateMapRequest(
+    @JsonProperty("user_id") @NotNull val userId: UUID
+)
