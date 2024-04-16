@@ -12,6 +12,7 @@ Welcome to the **Guru-GPT API** documentation! This document provides you with a
 - [Development](#development)
   - [Architecture](#architecture)
   - [Database](#database)
+  - [SonarCloud Analytics](#sonar)
 - [Contributing](#contributing)
 - [License](#license)
 ## Getting Started
@@ -75,6 +76,9 @@ We use PostgreSQL as our database. The schema and initial setup are managed usin
 
 ### Where is the API-GURU-GPT in the Guru's flow
 ![guru-gpt-flow](./documentation/assets/guru-gpt-flow.jpg)
+
+### Sonar
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=GabrielPedrico_api-guru-gpt&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=GabrielPedrico_api-guru-gpt) [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=GabrielPedrico_api-guru-gpt&metric=bugs)](https://sonarcloud.io/summary/new_code?id=GabrielPedrico_api-guru-gpt) [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=GabrielPedrico_api-guru-gpt&metric=coverage)](https://sonarcloud.io/summary/new_code?id=GabrielPedrico_api-guru-gpt) [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=GabrielPedrico_api-guru-gpt&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=GabrielPedrico_api-guru-gpt) [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=GabrielPedrico_api-guru-gpt&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=GabrielPedrico_api-guru-gpt) [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=GabrielPedrico_api-guru-gpt&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=GabrielPedrico_api-guru-gpt) [![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=GabrielPedrico_api-guru-gpt&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=GabrielPedrico_api-guru-gpt) [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=GabrielPedrico_api-guru-gpt&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=GabrielPedrico_api-guru-gpt) [![SonarCloud](https://sonarcloud.io/images/project_badges/sonarcloud-black.svg)](https://sonarcloud.io/summary/new_code?id=GabrielPedrico_api-guru-gpt) 
 
 ## Contributing
 
