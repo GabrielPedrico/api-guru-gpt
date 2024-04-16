@@ -2,21 +2,29 @@ package com.openai.guru.adapter.broker.delivery
 
 import com.openai.guru.adapter.http.spring.dto.request.CreateMapRequest
 import com.openai.guru.adapter.http.spring.dto.response.ThreadResponseDto
+import com.openai.guru.core.model.CreateMapModel
 import com.openai.guru.core.port.`in`.CreateNumerologyMapPortIn
+import org.slf4j.Logger
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 
 @Service
 class NumerologyMapService(
-    val createNumerologyMapPortIn: CreateNumerologyMapPortIn
+    val createNumerologyMapPortIn: CreateNumerologyMapPortIn,
+    val log:Logger
 ) {
 
-    fun createMap(request: CreateMapRequest): ResponseEntity<ThreadResponseDto> {
-        val response = createNumerologyMapPortIn.createNumerologyMap(request.userId).let {
-            ResponseEntity.status(HttpStatus.CREATED).body(ThreadResponseDto(it.threadId, it.createdAt, it.status))
+    fun createMap(request: CreateMapRequest,correlationId: String): ResponseEntity<ThreadResponseDto> =
+        createNumerologyMapPortIn.createNumerologyMap(request.toCreateMapModel(correlationId)).let {
+            log.info("[GURU-GPT][CORRELATION-ID:{$correlationId}]Numerology Map Request Created successfully for user_id:${request.userId}\n{thread_id:${it.threadId},\nstatus:${it.status}[GURU-GPT]")
+            ResponseEntity.status(HttpStatus.ACCEPTED).body(ThreadResponseDto(it.threadId, it.createdAt, it.status))
         }
+}
 
-        return response
-    }
+fun CreateMapRequest.toCreateMapModel(correlationId: String): CreateMapModel {
+    return CreateMapModel(
+        userId = this.userId,
+        correlationId = correlationId
+    )
 }

@@ -53,7 +53,7 @@ Currently, Guru-GPT API provides a single endpoint that can be used to interact 
 - **REQUEST BODY**:
   ```json
   {
-    "userId": "e16d1585-3e17-4157-a51c-8b259dc45035"
+    "user_id": "e16d1585-3e17-4157-a51c-8b259dc45035"
   }
 - **RESPONSE BODY**:
     ```json
@@ -74,7 +74,7 @@ Guru-GPT API is built using hexagonal architecture, which allows us to keep our 
 We use PostgreSQL as our database. The schema and initial setup are managed using Docker, making it easy to start the development environment with consistent database configuration.
 
 ### Where is the API-GURU-GPT in the Guru's flow
-![image](https://github.com/GabrielPedrico/api-guru-gpt/assets/61802922/ff7fc4d0-5f33-4f1f-b217-4f17b159737d)
+![guru-gpt-flow](./documentation/assets/guru-gpt-flow.jpg)
 
 ## Contributing
 
