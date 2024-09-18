@@ -1,22 +1,37 @@
 plugins {
 	id 'java'
 	id 'jacoco'
-	id 'org.springframework.boot' version '3.3.0-SNAPSHOT'
+	id 'org.springframework.boot' version '3.2.1'
 	id 'io.spring.dependency-management' version '1.1.4'
 	id 'org.jetbrains.kotlin.jvm' version '1.9.21'
 	id 'org.jetbrains.kotlin.plugin.spring' version '1.9.21'
 	id 'org.jetbrains.kotlin.plugin.jpa' version '1.9.21'
 	id "org.sonarqube" version "5.0.0.4638" // Replace '3.3' with the correct SonarQube plugin version
+	id 'pl.allegro.tech.build.axion-release' version '1.15.0'
+}
+
+scmVersion {
+	versionIncrementer 'incrementPatch' // Define como a versão será incrementada (patch por padrão)
+}
+
+scmVersion {
+	versionIncrementer 'incrementPatch' // Para incrementar o patch
+	// Outras opções:
+	// versionIncrementer 'incrementMinor' // Para incrementar a versão minor
+	// versionIncrementer 'incrementMajor' // Para incrementar a versão major
+	// Aqui você também pode definir outras estratégias de versionamento
 }
 
 repositories {
 	mavenCentral()
-	maven { url 'https://repo.spring.io/milestone' }
-	maven { url 'https://repo.spring.io/snapshot' }
+	maven { url 'https://repo.spring.io/milestone' } // Mantém apenas os milestones se necessário
 }
 
+
 dependencies {
-	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '3.2.1'
+	implementation 'org.springframework.boot:spring-boot-starter-web:3.2.1'
+	implementation 'org.springframework.boot:spring-boot-starter-json:3.2.1'
+	implementation 'org.springframework.boot:spring-boot-starter-tomcat:3.2.1'
 	implementation group: 'com.fasterxml.jackson.module', name: 'jackson-module-kotlin', version: '2.16.1'
 	runtimeOnly group: 'org.jetbrains.kotlin', name: 'kotlin-reflect', version: '1.9.22'
 	implementation group: 'org.springframework.security', name: 'spring-security-crypto', version: '6.2.1'
@@ -25,6 +40,7 @@ dependencies {
 
 group = 'com.openai'
 version = '0.0.1-SNAPSHOT'
+version = scmVersion.version // O plugin `axion-release` vai gerenciar a versão
 
 java {
 	sourceCompatibility = '17'
@@ -66,3 +82,13 @@ sonarqube {
 		property "sonar.exclusions", "build/generated/**/*"
 	}
 }
+
+processResources {
+	filesMatching('banner.txt') {
+		filter(org.apache.tools.ant.filters.ReplaceTokens, tokens: ['projectVersion': scmVersion.version])
+	}
+}
+
+
+
+
