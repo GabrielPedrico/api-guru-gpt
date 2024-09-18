@@ -11,16 +11,32 @@ plugins {
 }
 
 scmVersion {
-	versionIncrementer 'incrementPatch' // Define como a versão será incrementada (patch por padrão)
+	tag {
+		prefix = '' // Prefixo vazio para as tags
+	}
+	nextVersion {
+		suffix = 'SNAPSHOT' // Sufixo para a próxima versão
+	}
+	// Este closure pode ser usado para modificar o comportamento do versionamento
+	versionIncrementer 'incrementMinorIfNotOnRelease'
 }
 
-scmVersion {
-	versionIncrementer 'incrementPatch' // Para incrementar o patch
-	// Outras opções:
-	// versionIncrementer 'incrementMinor' // Para incrementar a versão minor
-	// versionIncrementer 'incrementMajor' // Para incrementar a versão major
-	// Aqui você também pode definir outras estratégias de versionamento
+tasks.named('release') {
+	onlyIf {
+		// Condicional para permitir release apenas em branches específicas
+		def currentBranch = gitCurrentBranch()
+		return currentBranch.startsWith('feature/') || currentBranch == 'master'
+	}
 }
+
+def gitCurrentBranch() {
+	def process = 'git rev-parse --abbrev-ref HEAD'.execute()
+	process.waitFor()
+	def branch = process.in.text.trim()
+	return branch
+}
+
+
 
 repositories {
 	mavenCentral()
@@ -37,6 +53,11 @@ dependencies {
 	implementation group: 'org.springframework.security', name: 'spring-security-crypto', version: '6.2.1'
 	testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '3.2.2'
 }
+
+tasks.named('currentVersion') {
+	doNotTrackState("Avoid state tracking for version task")
+}
+
 
 group = 'com.openai'
 version = '0.0.1-SNAPSHOT'
