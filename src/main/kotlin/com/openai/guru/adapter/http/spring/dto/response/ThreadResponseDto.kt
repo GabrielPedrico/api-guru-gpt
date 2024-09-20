@@ -9,5 +9,5 @@ data class ThreadResponseDto(
     @JsonFormat(shape = JsonFormat.Shape.NUMBER)
     @JsonProperty("created_at")
     val createdAt: Long?,
-    val status: String?
+    val status: String?,
 )

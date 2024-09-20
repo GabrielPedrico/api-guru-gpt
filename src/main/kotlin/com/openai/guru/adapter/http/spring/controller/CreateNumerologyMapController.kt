@@ -16,15 +16,16 @@ import org.springframework.web.bind.annotation.RestController
 @Service
 @RestController
 @RequestMapping(produces = [MediaType.APPLICATION_JSON_VALUE])
-class CreateNumerologyMapController(val service: NumerologyMapService,
-                                    val log:Logger) {
-
+class CreateNumerologyMapController(
+    val service: NumerologyMapService,
+    val log: Logger,
+) {
     @PostMapping("/numerology_map")
     fun createNumerologyMap(
         @RequestHeader("X-Correlation-ID") correlationId: String,
-        @RequestBody request: CreateMapRequest
+        @RequestBody request: CreateMapRequest,
     ): ResponseEntity<ThreadResponseDto> {
-        log.info("Starting GURU-GPT for Resource /numerology_map request:${request}")
-        return service.createMap(request,correlationId).also { log.info("Requested a numerology map for user_id:${request.userId}") }
+        log.info("Starting GURU-GPT for Resource /numerology_map request:$request")
+        return service.createMap(request, correlationId).also { log.info("Requested a numerology map for user_id:${request.userId}") }
     }
 }

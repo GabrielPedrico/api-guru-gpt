@@ -7,5 +7,5 @@ import java.util.UUID
 
 @Validated
 data class CreateMapRequest(
-    @JsonProperty("user_id") @NotNull val userId: UUID
+    @JsonProperty("user_id") @NotNull val userId: UUID,
 )

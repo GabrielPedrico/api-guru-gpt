@@ -35,10 +35,9 @@ data class ThreadRunDto(
     val tools: List<ToolsDto> = emptyList(),
     @JsonProperty("file_ids")
     val fileIds: List<String> = emptyList(),
-    val metadata: Map<String, Any> = emptyMap()
+    val metadata: Map<String, Any> = emptyMap(),
 )
 
-
 data class ToolsDto(
-    val type: String
+    val type: String,
 )
