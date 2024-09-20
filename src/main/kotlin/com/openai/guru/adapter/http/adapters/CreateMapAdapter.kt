@@ -16,9 +16,9 @@ class CreateMapAdapter(
 ) : CreateNumerologyMapPortOut {
 
     override fun createMap(userId: UUID,correlationId:String): ThreadResponseModel {
-        log.info("[GURU-GPT][CORRELATION-ID:{$correlationId}]Checking user elegibility...[GURU-GPT]")
+        log.info("Checking user elegibility...")
         val user = paymentSender.isUserEligibleForCreateMap(userId,correlationId)
-        log.info("[GURU-GPT][CORRELATION-ID:{$correlationId}]Elegibility OK! User is able to create a Numerology Map, sending openai request...[GURU-GPT]")
+        log.info("Elegibility OK! User is able to create a Numerology Map, sending openai request...")
         return gptSender.createNumerologyMap(user,correlationId).run {
             ThreadResponseModel(threadId = threadId, createdAt = createdAt, status = status)
         }

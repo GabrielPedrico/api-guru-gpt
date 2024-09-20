@@ -5,5 +5,5 @@ import org.springframework.http.HttpStatus
 
 class IntegrationException(errorReponse: ErrorResponse): HttpException(errorReponse) {
     override fun getHttpStatus(): HttpStatus =
-        HttpStatus.valueOf(getErrorResponse().statusCode ?: HttpStatus.REQUEST_TIMEOUT.value())
+        HttpStatus.valueOf(getErrorResponse().statusCode ?: HttpStatus.SERVICE_UNAVAILABLE.value())
 }

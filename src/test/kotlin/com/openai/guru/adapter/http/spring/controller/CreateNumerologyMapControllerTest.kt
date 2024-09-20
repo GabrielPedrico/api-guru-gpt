@@ -50,7 +50,7 @@ class CreateNumerologyMapControllerTest @Autowired constructor(
         val userResponse = UserDto(name = "John", lastname = "Doe", birthday = LocalDate.of(1994,5,10))
         val headers = HttpHeaders()
         headers.contentType = MediaType.APPLICATION_JSON
-        headers.set("correlation_id", correlationId)
+        headers.set("X-CORRELATION-ID", correlationId)
 
         /** (Mocking setup) **/
         `when`(sendPaymentAdapter.isUserEligibleForCreateMap(userId, correlationId)).thenReturn(userResponse)
@@ -78,7 +78,7 @@ class CreateNumerologyMapControllerTest @Autowired constructor(
         val request = CreateMapRequest(userId = userId)
         val headers = HttpHeaders()
         headers.contentType = MediaType.APPLICATION_JSON
-        headers.set("correlation_id", correlationId)
+        headers.set("X-CORRELATION-ID", correlationId)
 
         /** (Mocking setup) **/
         `when`(sendPaymentAdapter.isUserEligibleForCreateMap(userId,correlationId)).thenThrow(
@@ -112,7 +112,7 @@ class CreateNumerologyMapControllerTest @Autowired constructor(
         val request = CreateMapRequest(userId = userId)
         val headers = HttpHeaders()
         headers.contentType = MediaType.APPLICATION_JSON
-        headers.set("correlation_id", correlationId)
+        headers.set("X-CORRELATION-ID", correlationId)
 
         /** (Mocking setup) **/
         `when`(sendPaymentAdapter.isUserEligibleForCreateMap(userId,correlationId)).thenThrow(
@@ -146,7 +146,7 @@ class CreateNumerologyMapControllerTest @Autowired constructor(
         val request = CreateMapRequest(userId = userId)
         val headers = HttpHeaders()
         headers.contentType = MediaType.APPLICATION_JSON
-        headers.set("correlation_id", correlationId)
+        headers.set("X-CORRELATION-ID", correlationId)
 
         /** (Mocking setup) **/
         `when`(sendPaymentAdapter.isUserEligibleForCreateMap(userId,correlationId)).thenThrow(
@@ -163,7 +163,7 @@ class CreateNumerologyMapControllerTest @Autowired constructor(
         )
 
         /** (Validations) **/
-        assertEquals(HttpStatus.REQUEST_TIMEOUT, response.statusCode)
+        assertEquals(HttpStatus.SERVICE_UNAVAILABLE, response.statusCode)
         assertNotNull(response.body)
         with(response.body){
             assertNotNull(id)
@@ -203,7 +203,7 @@ class CreateNumerologyMapControllerTest @Autowired constructor(
         val request = CreateMapRequest(userId = userId)
         val headers = HttpHeaders()
         headers.contentType = MediaType.APPLICATION_JSON
-        headers.set("correlation_id", correlationId)
+        headers.set("X-CORRELATION-ID", correlationId)
 
         /** (Mocking setup) **/
         `when`(sendPaymentAdapter.isUserEligibleForCreateMap(userId,correlationId)).thenThrow(
