@@ -4,5 +4,8 @@ import com.openai.guru.adapter.http.spring.dto.UserDto
 import com.openai.guru.adapter.http.spring.dto.response.ThreadResponseDto
 
 fun interface SendGptPortOut {
-    fun createNumerologyMap(userResponse : UserDto,correlationId:String): ThreadResponseDto
+    fun createNumerologyMap(
+        userResponse: UserDto,
+        correlationId: String,
+    ): ThreadResponseDto
 }

@@ -4,11 +4,9 @@ import com.openai.guru.adapter.http.spring.dto.response.error.ErrorResponse
 import org.springframework.http.HttpStatus
 
 abstract class HttpException(
-    private val errorResponse: ErrorResponse
+    private val errorResponse: ErrorResponse,
 ) : RuntimeException(errorResponse.toString()) {
-
     abstract fun getHttpStatus(): HttpStatus
 
     fun getErrorResponse() = errorResponse
 }
-

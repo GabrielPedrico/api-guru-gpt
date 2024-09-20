@@ -13,8 +13,7 @@ import org.springframework.boot.test.mock.mockito.SpyBean
 import org.springframework.http.ResponseEntity
 import org.springframework.test.context.TestPropertySource
 import java.time.LocalDate
-import java.util.*
-
+import java.util.UUID
 
 @TestPropertySource(
     properties = [
@@ -22,12 +21,11 @@ import java.util.*
         "app.assistant=asst_LIoCauDKaPo7YBDIonAKXg91",
         "app.token=Bearer dummytoken123456",
         "app.header=dummyheader",
-        "app.payment=https://amazon-gurupayment-api/"
-    ]
+        "app.payment=https://amazon-gurupayment-api/",
+    ],
 )
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class SendPaymentAdapterTest {
-
     @SpyBean
     private lateinit var sendPaymentAdapter: SendPaymentAdapter
 
@@ -38,16 +36,17 @@ class SendPaymentAdapterTest {
         val correlationId = UUID.randomUUID().toString()
 
         /** (Mocking setup) **/
-        val mockResponse = ResponseEntity.ok()
-            .body(
-                PaymentResponse(
-                    userId = UUID.randomUUID().toString(),
-                    name = "Gabriel",
-                    lastname = "Pedrico",
-                    birthday = LocalDate.of(1990, 1, 1),
-                    elegebility = true
+        val mockResponse =
+            ResponseEntity.ok()
+                .body(
+                    PaymentResponse(
+                        userId = UUID.randomUUID().toString(),
+                        name = "Gabriel",
+                        lastname = "Pedrico",
+                        birthday = LocalDate.of(1990, 1, 1),
+                        elegebility = true,
+                    ),
                 )
-            )
 
         Mockito.doReturn(mockResponse).`when`(sendPaymentAdapter).callGuruPayment(userId, correlationId)
 
@@ -61,7 +60,6 @@ class SendPaymentAdapterTest {
             Assertions.assertEquals("Pedrico", lastname)
             Assertions.assertEquals(LocalDate.of(1990, 1, 1), birthday)
         }
-
     }
 
     @Test
@@ -71,16 +69,17 @@ class SendPaymentAdapterTest {
         val correlationId = UUID.randomUUID().toString()
 
         /** (Mocking setup) **/
-        val mockResponse = ResponseEntity.ok()
-            .body(
-                PaymentResponse(
-                    userId = UUID.randomUUID().toString(),
-                    name = "Gabriel",
-                    lastname = "Pedrico",
-                    birthday = LocalDate.of(1990, 1, 1),
-                    elegebility = false
+        val mockResponse =
+            ResponseEntity.ok()
+                .body(
+                    PaymentResponse(
+                        userId = UUID.randomUUID().toString(),
+                        name = "Gabriel",
+                        lastname = "Pedrico",
+                        birthday = LocalDate.of(1990, 1, 1),
+                        elegebility = false,
+                    ),
                 )
-            )
 
         Mockito.doReturn(mockResponse).`when`(sendPaymentAdapter).callGuruPayment(userId, correlationId)
 
@@ -88,7 +87,6 @@ class SendPaymentAdapterTest {
         assertThrows<UserNotElegibleException> {
             sendPaymentAdapter.isUserEligibleForCreateMap(userId, correlationId)
         }
-
     }
 
     @Test
@@ -102,5 +100,4 @@ class SendPaymentAdapterTest {
             sendPaymentAdapter.isUserEligibleForCreateMap(userId, correlationId)
         }
     }
-
 }

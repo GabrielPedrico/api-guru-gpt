@@ -13,7 +13,7 @@ import org.springframework.boot.test.mock.mockito.SpyBean
 import org.springframework.http.ResponseEntity
 import org.springframework.test.context.TestPropertySource
 import java.time.LocalDate
-import java.util.*
+import java.util.UUID
 
 @TestPropertySource(
     properties = [
@@ -21,32 +21,33 @@ import java.util.*
         "app.assistant=asst_LIoCauDKaPo7YBDIonAKXg91",
         "app.token=Bearer dummytoken123456",
         "app.header=dummyheader",
-        "app.payment=https://amazon-gurupayment-api/"
-    ]
+        "app.payment=https://amazon-gurupayment-api/",
+    ],
 )
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class SendMessageGptAdapterTest {
-
     @SpyBean
     private lateinit var sendMessageGptAdapter: SendGptAdapter
 
     @Test
     fun `test sendGptMessage success`() {
         /** (Scenario setup) **/
-        val user = UserDto(
-            name = "Gabriel",
-            lastname = "Pedrico",
-            birthday = LocalDate.of(1990, 1, 1),
-        )
+        val user =
+            UserDto(
+                name = "Gabriel",
+                lastname = "Pedrico",
+                birthday = LocalDate.of(1990, 1, 1),
+            )
 
         /** (Mocking setup) **/
-        val mockResponse = ResponseEntity.ok(
-            ThreadRunDto(
-                threadId = "thread_gdTBaeDCwRrjAOBI0C5vNCsQ",
-                createdAt = 1704608683L,
-                status = "queued"
+        val mockResponse =
+            ResponseEntity.ok(
+                ThreadRunDto(
+                    threadId = "thread_gdTBaeDCwRrjAOBI0C5vNCsQ",
+                    createdAt = 1704608683L,
+                    status = "queued",
+                ),
             )
-        )
         doReturn(mockResponse).`when`(sendMessageGptAdapter).callOpenAI(user)
 
         /** (Exercise) **/
@@ -62,11 +63,12 @@ class SendMessageGptAdapterTest {
     @Test
     fun `test sendGptMessage error scenario`() {
         /** (Scenario setup) **/
-        val user = UserDto(
-            name = "Gabriel",
-            lastname = "Pedrico",
-            birthday = LocalDate.of(1990, 1, 1),
-        )
+        val user =
+            UserDto(
+                name = "Gabriel",
+                lastname = "Pedrico",
+                birthday = LocalDate.of(1990, 1, 1),
+            )
 
         /** (Validations) **/
         assertThrows<IntegrationException> {

@@ -22,31 +22,42 @@ import java.util.UUID
 class SendPaymentAdapter(
     private val properties: Properties,
     private val restTemplate: RestTemplate = RestTemplate(),
-    private val log: Logger
+    private val log: Logger,
 ) : SendGuruPaymentPortOut {
     val paymentApi: String = properties.payment + "payment/{userId}/status"
-    override fun isUserEligibleForCreateMap(userId: UUID, correlationId: String): UserDto {
-        val responseEntity = runCatching {
-            callGuruPayment(userId, correlationId)
-        }.getOrElse { exception ->
-            log.error("Error while attempt to communicate with guru-payment-api URL: ${properties.payment}payment/${userId}/status")
-            throw IntegrationException(ErrorResponse(message = "Error while communicating with GURU-PAYMENT-API: ${exception.message}"))
-        }
+
+    override fun isUserEligibleForCreateMap(
+        userId: UUID,
+        correlationId: String,
+    ): UserDto {
+        val responseEntity =
+            runCatching {
+                callGuruPayment(userId, correlationId)
+            }.getOrElse { exception ->
+                log.error("Error while attempt to communicate with guru-payment-api URL: ${properties.payment}payment/$userId/status")
+                throw IntegrationException(ErrorResponse(message = "Error while communicating with GURU-PAYMENT-API: ${exception.message}"))
+            }
         return handleResponse(responseEntity)
     }
 
-    fun callGuruPayment(user: UUID, correlationId: String): ResponseEntity<PaymentResponse> {
+    fun callGuruPayment(
+        user: UUID,
+        correlationId: String,
+    ): ResponseEntity<PaymentResponse> {
         val url = createGuruPaymentURI(user, correlationId)
-        val headers = HttpHeaders().apply {
-            set("Content-Type", "application/json")
-            set("X-Correlation-ID", correlationId)
-        }
+        val headers =
+            HttpHeaders().apply {
+                set("Content-Type", "application/json")
+                set("X-Correlation-ID", correlationId)
+            }
         val entity = HttpEntity<String>(headers)
         return restTemplate.exchange(url, HttpMethod.GET, entity, PaymentResponse::class.java)
     }
 
-
-    fun createGuruPaymentURI(userId: UUID, correlationId: String): URI {
+    fun createGuruPaymentURI(
+        userId: UUID,
+        correlationId: String,
+    ): URI {
         return UriComponentsBuilder
             .fromUriString(paymentApi)
             .buildAndExpand(mapOf("userId" to userId))
@@ -55,13 +66,19 @@ class SendPaymentAdapter(
 
     private fun handleResponse(responseEntity: ResponseEntity<PaymentResponse>): UserDto =
         with(responseEntity) {
-            if (responseEntity.body?.elegebility == false) throw UserNotElegibleException(ErrorResponse(message = "User ${responseEntity.body.name} ${responseEntity.body.lastname} not eligible for create a map, payment is required"))
+            if (responseEntity.body?.elegebility == false) {
+                throw UserNotElegibleException(
+                    ErrorResponse(
+                        message =
+                            "User ${responseEntity.body.name} ${responseEntity.body.lastname} " +
+                                "not eligible for create a map, payment is required",
+                    ),
+                )
+            }
             UserDto(
                 body?.name,
                 body?.lastname,
-                body?.birthday
+                body?.birthday,
             )
         }
-
-
 }

@@ -8,6 +8,6 @@ data class PaymentResponse(
     val userId: String?,
     val name: String?,
     val lastname: String?,
-    val birthday:LocalDate?,
-    var elegebility: Boolean = false
+    val birthday: LocalDate?,
+    var elegebility: Boolean = false,
 )

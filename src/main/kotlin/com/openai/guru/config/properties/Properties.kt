@@ -8,5 +8,5 @@ class Properties(
     var assistant: String,
     var token: String,
     var header: String,
-    var payment:String
+    var payment: String,
 )

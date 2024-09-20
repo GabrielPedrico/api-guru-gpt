@@ -12,13 +12,14 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 @ControllerAdvice
 class AdviceControllerConfig(
-    private val request: HttpServletRequest
+    private val request: HttpServletRequest,
 ) : ResponseEntityExceptionHandler() {
-
     @ExceptionHandler(HttpException::class)
     protected fun handleHttpExceptions(throwable: HttpException): ResponseEntity<ErrorResponse> =
         throwable.getErrorResponse().let {
-            ResponseEntity.status(throwable.getHttpStatus()).body(buildErrorApiResponse(it.message, throwable.getHttpStatus().value(), it.user))
+            ResponseEntity.status(
+                throwable.getHttpStatus(),
+            ).body(buildErrorApiResponse(it.message, throwable.getHttpStatus().value(), it.user))
         }
 
     // Tratamento padrão para outros erros
@@ -36,7 +37,7 @@ class AdviceControllerConfig(
     private fun buildErrorApiResponse(
         message: String?,
         httpStatus: Int?,
-        user: UserDto?
+        user: UserDto?,
     ) = ErrorResponse(message = message, statusCode = httpStatus, endpoint = getPathUri(), user = user)
 
     private fun getPathUri() = getFullRouteRequest()
