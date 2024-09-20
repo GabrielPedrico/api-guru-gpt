@@ -21,10 +21,10 @@ class CreateNumerologyMapController(val service: NumerologyMapService,
 
     @PostMapping("/numerology_map")
     fun createNumerologyMap(
-        @RequestHeader("correlation_id") correlationId: String,
+        @RequestHeader("X-Correlation-ID") correlationId: String,
         @RequestBody request: CreateMapRequest
     ): ResponseEntity<ThreadResponseDto> {
-        log.info("[GURU-GPT][CORRELATION-ID:{$correlationId}] Starting GURU-GPT for Resource /numerology_map request:${request}[GURU-GPT]")
-        return service.createMap(request,correlationId).also { log.info("[GURU-GPT][CORRELATION-ID:{$correlationId}] Requested a numerology map for user_id:${request.userId}[GURU-GPT]") }
+        log.info("Starting GURU-GPT for Resource /numerology_map request:${request}")
+        return service.createMap(request,correlationId).also { log.info("Requested a numerology map for user_id:${request.userId}") }
     }
 }

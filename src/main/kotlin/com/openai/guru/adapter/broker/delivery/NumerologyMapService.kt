@@ -17,7 +17,7 @@ class NumerologyMapService(
 
     fun createMap(request: CreateMapRequest,correlationId: String): ResponseEntity<ThreadResponseDto> =
         createNumerologyMapPortIn.createNumerologyMap(request.toCreateMapModel(correlationId)).let {
-            log.info("[GURU-GPT][CORRELATION-ID:{$correlationId}]Numerology Map Request Created successfully for user_id:${request.userId}\n{thread_id:${it.threadId},\nstatus:${it.status}[GURU-GPT]")
+            log.info("Numerology Map Request Created successfully for user_id:${request.userId}\n{thread_id:${it.threadId},\nstatus:${it.status}")
             ResponseEntity.status(HttpStatus.ACCEPTED).body(ThreadResponseDto(it.threadId, it.createdAt, it.status))
         }
 }

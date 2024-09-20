@@ -28,7 +28,7 @@ class SendGptAdapter(
         val responseEntity = runCatching {
             callOpenAI(userResponse)
         }.getOrElse { exception ->
-            log.error("[GURU-GPT][CORRELATION-ID:{$correlationId}]Error while attempt to communicate with guru-openai-api URL:${openaiEndpoint} ASSISTANT:${properties.assistant}[GURU-GPT]")
+            log.error("Error while attempt to communicate with guru-openai-api URL:${openaiEndpoint} ASSISTANT:${properties.assistant}")
             throw IntegrationException(ErrorResponse(message = "Error while communicating with OPENAI: ${exception.message}"))
         }
         return handleResponse(responseEntity)

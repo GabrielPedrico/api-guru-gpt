@@ -29,7 +29,7 @@ class SendPaymentAdapter(
         val responseEntity = runCatching {
             callGuruPayment(userId, correlationId)
         }.getOrElse { exception ->
-            log.error("[GURU-GPT][CORRELATION-ID:{$correlationId}]Error while attempt to communicate with guru-payment-api URL: ${properties.payment}payment/${userId}/status [GURU-GPT]")
+            log.error("Error while attempt to communicate with guru-payment-api URL: ${properties.payment}payment/${userId}/status")
             throw IntegrationException(ErrorResponse(message = "Error while communicating with GURU-PAYMENT-API: ${exception.message}"))
         }
         return handleResponse(responseEntity)
@@ -39,7 +39,7 @@ class SendPaymentAdapter(
         val url = createGuruPaymentURI(user, correlationId)
         val headers = HttpHeaders().apply {
             set("Content-Type", "application/json")
-            set("correlation-id", correlationId)
+            set("X-Correlation-ID", correlationId)
         }
         val entity = HttpEntity<String>(headers)
         return restTemplate.exchange(url, HttpMethod.GET, entity, PaymentResponse::class.java)
