@@ -4,6 +4,6 @@ import java.time.LocalDate
 
 data class UserDto(
     val name: String?,
-    val lastname:String?,
-    val birthday:LocalDate?
+    val lastname: String?,
+    val birthday: LocalDate?,
 )

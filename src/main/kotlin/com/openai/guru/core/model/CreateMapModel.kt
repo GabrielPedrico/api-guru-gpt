@@ -4,5 +4,5 @@ import java.util.UUID
 
 data class CreateMapModel(
     val userId: UUID,
-    val correlationId: String
+    val correlationId: String,
 )

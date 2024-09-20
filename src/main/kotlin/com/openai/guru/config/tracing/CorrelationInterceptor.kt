@@ -2,14 +2,17 @@ package com.openai.guru.config.tracing
 
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
+import org.slf4j.MDC
 import org.springframework.stereotype.Component
 import org.springframework.web.servlet.HandlerInterceptor
-import org.slf4j.MDC
 
 @Component
 class CorrelationInterceptor : HandlerInterceptor {
-
-    override fun preHandle(request: HttpServletRequest, response: HttpServletResponse, handler: Any): Boolean {
+    override fun preHandle(
+        request: HttpServletRequest,
+        response: HttpServletResponse,
+        handler: Any,
+    ): Boolean {
         // Extrai o correlationId do header da requisição
         val correlationId = request.getHeader("X-Correlation-ID") ?: generateCorrelationId()
 
@@ -20,7 +23,12 @@ class CorrelationInterceptor : HandlerInterceptor {
         return true
     }
 
-    override fun afterCompletion(request: HttpServletRequest, response: HttpServletResponse, handler: Any, ex: Exception?) {
+    override fun afterCompletion(
+        request: HttpServletRequest,
+        response: HttpServletResponse,
+        handler: Any,
+        ex: Exception?,
+    ) {
         MDC.clear() // Limpa os valores do MDC após a requisição ser finalizada
     }
 

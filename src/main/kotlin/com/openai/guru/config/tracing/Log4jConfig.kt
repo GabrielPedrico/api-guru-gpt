@@ -7,13 +7,12 @@ import org.springframework.stereotype.Component
 
 @Component
 class Log4jConfig {
-
     @Bean
     fun logger(injectionPoint: org.springframework.beans.factory.InjectionPoint): Logger {
         return LoggerFactory.getLogger(
             injectionPoint.methodParameter?.containingClass
                 ?: injectionPoint.field?.declaringClass
-                ?: Log4jConfig::class.java
+                ?: Log4jConfig::class.java,
         )
     }
 }
